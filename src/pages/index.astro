@@ -1,0 +1,51 @@
+---
+import {Database} from 'sqlite3';
+import sqlite from 'sqlite'
+const { open } = sqlite
+const db: any = await open("./data/library.db")
+
+interface Book {
+	id: Number,
+	title: String,
+	pages: Number,
+	series_order: Number,
+	series_id: Number,
+	awards: null,
+  name: String
+}
+
+const bookshelf: Book[] = await db.all(
+	'SELECT * FROM books INNER JOIN authors ON authors.author_id = books.id INNER JOIN author ON author.id = authors.author_id;',
+	(_, rows: any) => {
+		return rows.forEach((row:any) => {
+			console.log(row)
+		return ({
+			id: row.id,
+            title: row.title,
+            pages: row.pages,
+            series_order: row.series_order,
+            awards: row.awards,
+            author: row.name
+		})
+	    })
+	}
+)
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Astro</title>
+	</head>
+	<body>
+		<h1>Books</h1>
+		<ul>
+			{bookshelf.map(book => (
+			  <li>{book.title} by {book.name}</li>
+			))}
+		</ul>
+	</body>
+</html>
