@@ -44,8 +44,10 @@ COPY /data /app/data
 
 # Setup sqlite3 on a separate volume
 RUN mkdir -p /data
-VOLUME /data
-ENV DATABASE_URL="file:///data/sqlite.db"
+# VOLUME /data
+ENV RAILWAY_VOLUME_NAME="data"
+ENV RAILWAY_VOLUME_PATH="/data"
+# ENV DATABASE_URL="file:///data/sqlite.db"
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
